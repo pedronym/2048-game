@@ -7,8 +7,8 @@ const Board = ({
   children,
 }: {
   isGameOver?: boolean;
-  score?: number;
-  restart?: () => void;
+  score: number;
+  restart: () => void;
   children?: React.ReactNode;
 }) => {
   return (
