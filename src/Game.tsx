@@ -9,7 +9,7 @@ import { GRID_SIZE, ANIMATION_TIMING } from "./config/constants";
 import "./Game.css";
 
 const Game = () => {
-  const { tiles, score, gameOver, restart, undo, canUndo } = useGame();
+  const { tiles, score, bestScore, gameOver, gameWin, restart, undo, canUndo, boardRef } = useGame();
 
   useEffect(() => {
     document.documentElement.style.setProperty(
@@ -31,7 +31,7 @@ const Game = () => {
           </div>
           <div className="best-score">
             <div className="score-label">Best</div>
-            <div className="score-value">{score}</div>
+            <div className="score-value">{bestScore}</div>
           </div>
         </div>
         <div className="header-controls">
@@ -41,8 +41,8 @@ const Game = () => {
         </div>
       </header>
 
-      <main className="board-container">
-        <Board isGameOver={gameOver} score={score} restart={restart}>
+      <main className="board-container" ref={boardRef as React.RefObject<HTMLDivElement>}>
+        <Board isGameOver={gameOver} isGameWin={gameWin} score={score} restart={restart}>
           {Array.from({ length: GRID_SIZE * GRID_SIZE }, (_, i) => (
             <Cell key={i} />
           ))}

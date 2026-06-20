@@ -1,7 +1,7 @@
 :root {
   --board-size: 4;
-  --cell-size: 110px;
-  --cell-gap: 4px;
+  --cell-size: min(22vmin, 110px);
+  --cell-gap: min(0.8vmin, 4px);
   --spacing-md: 12px;
   /* Colors */
   --brand: #795f3b;
@@ -18,48 +18,64 @@
   --tile-shadow-01: #a15a1b;
   --tile-shadow-02: #956940;
   --tile-shadow-angle: 135deg;
+  /* Font sizes */
+  --tile-font-xs: min(7vmin, 35px);
+  --tile-font-sm: min(7.2vmin, 36px);
+  --tile-font-md: min(8.4vmin, 42px);
+  --tile-font-lg: min(9vmin, 45px);
   /* Tile 2 */
   --tile-2-text: #96694b;
+  --tile-2-text-size: var(--tile-font-lg);
   --tile-2-bg-01: #ffcdab;
   --tile-2-bg-02: #fcc7a2;
   /* Tile 4 */
   --tile-4-text: #906f2b;
+  --tile-4-text-size: var(--tile-font-lg);
   --tile-4-bg-01: #fcdd9d;
   --tile-4-bg-02: #f6d593;
   /* Tile 8 */
   --tile-8-text: #668270;
+  --tile-8-text-size: var(--tile-font-lg);
   --tile-8-bg-01: #c0d2c6;
   --tile-8-bg-02: #bed1c5;
   /* Tile 16 */
   --tile-16-text: #777755;
+  --tile-16-text-size: var(--tile-font-lg);
   --tile-16-bg-01: #c7caaf;
   --tile-16-bg-02: #c5c4a8;
   /* Tile 32 */
   --tile-32-text: #697a97;
+  --tile-32-text-size: var(--tile-font-lg);
   --tile-32-bg-01: #c5d4ee;
   --tile-32-bg-02: #b5c7e5;
   /* Tile 64 */
   --tile-64-text: #6d6b93;
+  --tile-64-text-size: var(--tile-font-lg);
   --tile-64-bg-01: #c5c1e7;
   --tile-64-bg-02: #b2b3e0;
   /* Tile 128 */
   --tile-128-text: #8665a3;
+  --tile-128-text-size: var(--tile-font-md);
   --tile-128-bg-01: #c4abff;
   --tile-128-bg-02: #e8a2fc;
   /* Tile 256 */
   --tile-256-text: #a05da1;
+  --tile-256-text-size: var(--tile-font-md);
   --tile-256-bg-01: #e69ff1;
   --tile-256-bg-02: #ec97db;
   /* Tile 512 */
   --tile-512-text: #8e5081;
+  --tile-512-text-size: var(--tile-font-md);
   --tile-512-bg-01: #e995d8;
   --tile-512-bg-02: #e497d5;
   /* Tile 1024 */
   --tile-1024-text: #a75253;
+  --tile-1024-text-size: var(--tile-font-sm);
   --tile-1024-bg-01: #f8a8a9;
   --tile-1024-bg-02: #f79ea0;
   /* Tile 2048 */
   --tile-2048-text: #ffffff;
+  --tile-2048-text-size: var(--tile-font-xs);
   --tile-2048-bg-01: #795f3b;
   --tile-2048-bg-02: #6b5432;
   /* Radius */
@@ -105,7 +121,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 40px 80px 24px;
+  padding: 40px min(80px, 5vw) 24px;
 }
 
 .logo {
