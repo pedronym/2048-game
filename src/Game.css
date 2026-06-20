@@ -2,12 +2,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: none;
 }
 
 .board-wrapper {
   position: relative;
-  width: 460px;
-  height: 460px;
+  width: max-content;
+  height: max-content;
 }
 .board {
   padding: var(--cell-gap);
@@ -25,7 +26,12 @@
 
 .game-over {
   position: absolute;
-  inset: 100px 50px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 360px;
+  height: max-content;
   padding: 24px;
   z-index: 3;
   background-color: rgba(255, 255, 255, 0.1);
@@ -121,10 +127,17 @@
   pointer-events: none;
   left: var(--cell-gap);
   top: var(--cell-gap);
-  transform: translate(
+  -webkit-transform: translate3d(
     calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + 5px),
-    calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + 5px)
+    calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + 5px),
+    0
   );
+  transform: translate3d(
+    calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + 5px),
+    calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + 5px),
+    0
+  );
+  will-change: transform, filter, opacity;
   width: calc(var(--cell-size) * 1.1);
   height: calc(var(--cell-size) * 1.1);
   border-radius: var(--rounded-md);
@@ -135,6 +148,7 @@
   );
   opacity: 0;
   transition: opacity 50ms ease-out;
+  -webkit-filter: blur(10px);
   filter: blur(10px);
 }
 
@@ -148,9 +162,10 @@
   z-index: 2;
   left: var(--cell-gap);
   top: var(--cell-gap);
-  transform: translate(
+  transform: translate3d(
     calc(var(--x) * (var(--cell-size) + var(--cell-gap))),
-    calc(var(--y) * (var(--cell-size) + var(--cell-gap)))
+    calc(var(--y) * (var(--cell-size) + var(--cell-gap))),
+    0
   );
   transition: transform var(--tile-timing, 0ms) ease-in-out;
   will-change: transform;
@@ -183,6 +198,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  will-change: transform;
   width: var(--cell-size);
   height: var(--cell-size);
   border-radius: var(--rounded-md);
@@ -192,12 +208,13 @@
     0px 1px 2px 0px #4333204d;
   color: var(--tile-2-text);
   font-weight: 800;
-  font-size: 45px;
+  font-size: var(--tile-font-lg);
   user-select: none;
 }
 
 /* TILES */
 .tile-2 {
+  font-size: var(--tile-2-text-size);
   color: var(--tile-2-text);
   background: linear-gradient(
     135deg,
@@ -207,6 +224,7 @@
 }
 
 .tile-4 {
+  font-size: var(--tile-4-text-size);
   color: var(--tile-4-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -216,6 +234,7 @@
 }
 
 .tile-8 {
+  font-size: var(--tile-8-text-size);
   color: var(--tile-8-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -225,6 +244,7 @@
 }
 
 .tile-16 {
+  font-size: var(--tile-16-text-size);
   color: var(--tile-16-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -234,6 +254,7 @@
 }
 
 .tile-32 {
+  font-size: var(--tile-32-text-size);
   color: var(--tile-32-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -243,6 +264,7 @@
 }
 
 .tile-64 {
+  font-size: var(--tile-64-text-size);
   color: var(--tile-64-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -252,6 +274,7 @@
 }
 
 .tile-128 {
+  font-size: var(--tile-128-text-size);
   color: var(--tile-128-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -261,6 +284,7 @@
 }
 
 .tile-256 {
+  font-size: var(--tile-256-text-size);
   color: var(--tile-256-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -270,6 +294,7 @@
 }
 
 .tile-512 {
+  font-size: var(--tile-512-text-size);
   color: var(--tile-512-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -279,6 +304,7 @@
 }
 
 .tile-1024 {
+  font-size: var(--tile-1024-text-size);
   color: var(--tile-1024-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -288,6 +314,7 @@
 }
 
 .tile-2048 {
+  font-size: var(--tile-2048-text-size);
   color: var(--tile-2048-text);
   background: linear-gradient(
     var(--tile-shadow-angle),
@@ -331,24 +358,24 @@
 
 @keyframes tile-merge-pulse {
   0% {
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
   }
   25% {
-    transform: scale(1.2);
+    transform: scale(1.2) rotate(0deg);
   }
   50% {
-    transform: rotate(5deg);
+    transform: scale(1.2) rotate(5deg);
   }
   60% {
-    transform: rotate(0deg);
+    transform: scale(1.2) rotate(0deg);
   }
   70% {
-    transform: rotate(-5deg);
+    transform: scale(1.2) rotate(-5deg);
   }
   80% {
-    transform: rotate(0deg);
+    transform: scale(1.2) rotate(0deg);
   }
   100% {
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
   }
 }
