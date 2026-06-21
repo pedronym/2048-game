@@ -1,0 +1,209 @@
+.tile {
+  position: absolute;
+  z-index: 2;
+  left: var(--cell-gap);
+  top: var(--cell-gap);
+  width: var(--cell-size);
+  height: var(--cell-size);
+  translate: calc(var(--x) * (var(--cell-size) + var(--cell-gap)))
+    calc(var(--y) * (var(--cell-size) + var(--cell-gap)));
+  transition:
+    translate var(--tile-timing, 0ms) var(--ease-expo),
+    z-index 0ms var(--tile-timing, 0ms);
+  will-change: translate, scale, opacity;
+}
+
+.tileNew,
+.tileMerged {
+  animation: tile-show var(--animation-timing) ease-out forwards;
+}
+
+.tileMerged .tileNumber {
+  animation: tile-merge-pulse calc(var(--animation-timing) * 2) ease-out
+    forwards;
+}
+
+.tileNumber {
+  display: inline-block;
+  will-change: transform;
+}
+
+.tileInner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  will-change: transform;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  border-radius: var(--rounded-md);
+  box-shadow:
+    -4px -4px 2px 0px #00000014 inset,
+    4px 4px 1px 0px #ffffff33 inset,
+    0px 1px 2px 0px #4333204d;
+  color: var(--tile-2-text);
+  font-weight: 800;
+  font-size: var(--tile-font-lg);
+  user-select: none;
+}
+
+/* TILES */
+.tile2 {
+  font-size: var(--tile-2-text-size);
+  color: var(--tile-2-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-2-bg-01) 0%,
+    var(--tile-2-bg-02) 100%
+  );
+}
+
+.tile4 {
+  font-size: var(--tile-4-text-size);
+  color: var(--tile-4-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-4-bg-01) 0%,
+    var(--tile-4-bg-02) 100%
+  );
+}
+
+.tile8 {
+  font-size: var(--tile-8-text-size);
+  color: var(--tile-8-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-8-bg-01) 0%,
+    var(--tile-8-bg-02) 100%
+  );
+}
+
+.tile16 {
+  font-size: var(--tile-16-text-size);
+  color: var(--tile-16-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-16-bg-01) 0%,
+    var(--tile-16-bg-02) 100%
+  );
+}
+
+.tile32 {
+  font-size: var(--tile-32-text-size);
+  color: var(--tile-32-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-32-bg-01) 0%,
+    var(--tile-32-bg-02) 100%
+  );
+}
+
+.tile64 {
+  font-size: var(--tile-64-text-size);
+  color: var(--tile-64-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-64-bg-01) 0%,
+    var(--tile-64-bg-02) 100%
+  );
+}
+
+.tile128 {
+  font-size: var(--tile-128-text-size);
+  color: var(--tile-128-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-128-bg-01) 0%,
+    var(--tile-128-bg-02) 100%
+  );
+}
+
+.tile256 {
+  font-size: var(--tile-256-text-size);
+  color: var(--tile-256-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-256-bg-01) 0%,
+    var(--tile-256-bg-02) 100%
+  );
+}
+
+.tile512 {
+  font-size: var(--tile-512-text-size);
+  color: var(--tile-512-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-512-bg-01) 0%,
+    var(--tile-512-bg-02) 100%
+  );
+}
+
+.tile1024 {
+  font-size: var(--tile-1024-text-size);
+  color: var(--tile-1024-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-1024-bg-01) 0%,
+    var(--tile-1024-bg-02) 100%
+  );
+}
+
+.tile2048 {
+  font-size: var(--tile-2048-text-size);
+  color: var(--tile-2048-text);
+  background: linear-gradient(
+    var(--gradient-angle),
+    var(--tile-2048-bg-01) 0%,
+    var(--tile-2048-bg-02) 100%
+  );
+}
+
+/* ANIMATIONS */
+@keyframes tile-show {
+  from {
+    scale: 0.5;
+    opacity: 0;
+  }
+  to {
+    scale: 1;
+    opacity: 1;
+  }
+}
+
+@keyframes tile-fade-out {
+  0%,
+  70% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes tile-merge-pulse {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.25) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.25) rotate(5deg);
+  }
+  60% {
+    transform: scale(1.25) rotate(0deg);
+  }
+  75% {
+    transform: scale(1.25) rotate(-5deg);
+  }
+  85% {
+    transform: scale(1.25) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}

@@ -1,0 +1,7 @@
+.cell {
+  box-shadow:
+    -1px -1px 1px 0px #e5cfb3 inset,
+    1px 1px 1px 0px #ffffff33 inset;
+  border-radius: var(--rounded-md);
+  background-color: var(--cell);
+}

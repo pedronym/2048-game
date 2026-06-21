@@ -1,6 +1,6 @@
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from 'react';
 
-export type SwipeDirection = "up" | "down" | "left" | "right";
+export type SwipeDirection = 'up' | 'down' | 'left' | 'right';
 
 interface UseSwipeOptions {
   onSwipe: (direction: SwipeDirection) => void;
@@ -8,7 +8,11 @@ interface UseSwipeOptions {
   targetRef?: RefObject<HTMLElement | null>;
 }
 
-export function useSwipe({ onSwipe, threshold = 30, targetRef }: UseSwipeOptions) {
+export function useSwipe({
+  onSwipe,
+  threshold = 30,
+  targetRef,
+}: UseSwipeOptions) {
   const onSwipeRef = useRef(onSwipe);
 
   useEffect(() => {
@@ -32,7 +36,13 @@ export function useSwipe({ onSwipe, threshold = 30, targetRef }: UseSwipeOptions
 
     const handleTouchEnd = (e: TouchEvent | Event) => {
       const touchEvent = e as TouchEvent;
-      if (!touchStartX || !touchStartY || !touchEvent.changedTouches || touchEvent.changedTouches.length === 0) return;
+      if (
+        !touchStartX ||
+        !touchStartY ||
+        !touchEvent.changedTouches ||
+        touchEvent.changedTouches.length === 0
+      )
+        return;
 
       const touchEndX = touchEvent.changedTouches[0].clientX;
       const touchEndY = touchEvent.changedTouches[0].clientY;
@@ -43,14 +53,14 @@ export function useSwipe({ onSwipe, threshold = 30, targetRef }: UseSwipeOptions
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
         // Horizontal swipe
         if (Math.abs(deltaX) > threshold) {
-          if (deltaX > 0) onSwipeRef.current("right");
-          else onSwipeRef.current("left");
+          if (deltaX > 0) onSwipeRef.current('right');
+          else onSwipeRef.current('left');
         }
       } else {
         // Vertical swipe
         if (Math.abs(deltaY) > threshold) {
-          if (deltaY > 0) onSwipeRef.current("down");
-          else onSwipeRef.current("up");
+          if (deltaY > 0) onSwipeRef.current('down');
+          else onSwipeRef.current('up');
         }
       }
 
@@ -58,12 +68,14 @@ export function useSwipe({ onSwipe, threshold = 30, targetRef }: UseSwipeOptions
       touchStartY = 0;
     };
 
-    targetElement.addEventListener("touchstart", handleTouchStart, { passive: false });
-    targetElement.addEventListener("touchend", handleTouchEnd);
+    targetElement.addEventListener('touchstart', handleTouchStart, {
+      passive: false,
+    });
+    targetElement.addEventListener('touchend', handleTouchEnd);
 
     return () => {
-      targetElement.removeEventListener("touchstart", handleTouchStart);
-      targetElement.removeEventListener("touchend", handleTouchEnd);
+      targetElement.removeEventListener('touchstart', handleTouchStart);
+      targetElement.removeEventListener('touchend', handleTouchEnd);
     };
   }, [threshold, targetRef]);
 }

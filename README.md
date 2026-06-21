@@ -5,6 +5,7 @@
 A 2048 game built as a single-page React application. The game features a 4x4 grid where players slide tiles to combine them, aiming to reach the 2048 tile. This project implements the core 2048 game mechanics and a responsive design.
 
 ### Key Architectural Decisions
+
 - **React Hooks for Game State**: The game state is managed using `useReducer` and custom hooks (`useGame`, `useKeys`, `useSwipe`) to separate concerns between input handling and game logic.
 - **Immutable State Updates**: Game logic follows immutable updates to avoid side-effects.
 - **CSS Variables for Styling**: Styling uses global CSS variables, enabling dynamic styling based on tile values.

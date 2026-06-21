@@ -1,5 +1,5 @@
-import type { Tile } from "../@types";
-import { GRID_SIZE } from "../config/constants";
+import type { Tile } from '@/@types';
+import { GRID_SIZE } from '@/config/constants';
 
 export const generateId = () => Math.random().toString(36).substring(2, 9);
 
@@ -12,18 +12,18 @@ export const createTile = (x: number, y: number, value?: number): Tile => ({
 });
 
 // Helper to get coordinates groups based on movement direction
-export const getGroups = (direction: "up" | "down" | "left" | "right") => {
+export const getGroups = (direction: 'up' | 'down' | 'left' | 'right') => {
   const groups: { x: number; y: number }[][] = [];
   for (let i = 0; i < GRID_SIZE; i++) {
     const group: { x: number; y: number }[] = [];
     for (let j = 0; j < GRID_SIZE; j++) {
-      if (direction === "up") {
+      if (direction === 'up') {
         group.push({ x: i, y: j });
-      } else if (direction === "down") {
+      } else if (direction === 'down') {
         group.push({ x: i, y: GRID_SIZE - 1 - j });
-      } else if (direction === "left") {
+      } else if (direction === 'left') {
         group.push({ x: j, y: i });
-      } else if (direction === "right") {
+      } else if (direction === 'right') {
         group.push({ x: GRID_SIZE - 1 - j, y: i });
       }
     }
