@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 interface UseKeysOptions {
-  onKey: (direction: "up" | "down" | "left" | "right") => void;
+  onKey: (direction: 'up' | 'down' | 'left' | 'right') => void;
 }
 
 export function useKeys({ onKey }: UseKeysOptions) {
@@ -14,22 +14,22 @@ export function useKeys({ onKey }: UseKeysOptions) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
-        case "ArrowUp":
-          onKeyRef.current("up");
+        case 'ArrowUp':
+          onKeyRef.current('up');
           break;
-        case "ArrowDown":
-          onKeyRef.current("down");
+        case 'ArrowDown':
+          onKeyRef.current('down');
           break;
-        case "ArrowLeft":
-          onKeyRef.current("left");
+        case 'ArrowLeft':
+          onKeyRef.current('left');
           break;
-        case "ArrowRight":
-          onKeyRef.current("right");
+        case 'ArrowRight':
+          onKeyRef.current('right');
           break;
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 }

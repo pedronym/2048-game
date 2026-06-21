@@ -12,8 +12,8 @@ export interface Tile {
 export type GameState = {
   tiles: Tile[];
   isMoving: boolean;
-  gameOver: boolean;
-  gameWin: boolean;
+  isGameOver: boolean;
+  isGameWin: boolean;
   score: number;
   bestScore: number;
   history: { tiles: Tile[]; score: number }[];

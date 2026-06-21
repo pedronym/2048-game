@@ -1,9 +1,9 @@
-import { type GameState } from "../@types";
+import { type GameState } from '@/@types';
 
-const SECRET_KEY = "2048-pedronym";
+const SECRET_KEY = '2048-pedronym';
 
 function xorEncryptDecrypt(input: string, key: string): string {
-  let output = "";
+  let output = '';
   for (let i = 0; i < input.length; i++) {
     output += String.fromCharCode(
       input.charCodeAt(i) ^ key.charCodeAt(i % key.length),
@@ -14,12 +14,12 @@ function xorEncryptDecrypt(input: string, key: string): string {
 
 export function saveBestScore(score: number) {
   const encrypted = xorEncryptDecrypt(score.toString(), SECRET_KEY);
-  localStorage.setItem("bestScore", btoa(encrypted));
+  localStorage.setItem('bestScore', btoa(encrypted));
 }
 
 export function loadBestScore(): number {
   try {
-    const encryptedBase64 = localStorage.getItem("bestScore");
+    const encryptedBase64 = localStorage.getItem('bestScore');
     if (!encryptedBase64) return 0;
 
     const encrypted = atob(encryptedBase64);
@@ -36,23 +36,23 @@ export function saveGameState(state: GameState) {
   try {
     const stateToSave = {
       tiles: state.tiles,
-      gameOver: state.gameOver,
-      gameWin: state.gameWin,
+      isGameOver: state.isGameOver,
+      isGameWin: state.isGameWin,
       score: state.score,
       history: state.history,
     };
-    localStorage.setItem("gameState", btoa(JSON.stringify(stateToSave)));
+    localStorage.setItem('gameState', btoa(JSON.stringify(stateToSave)));
   } catch (e) {
-    console.error("Failed to save game state", e);
+    console.error('Failed to save game state', e);
   }
 }
 
-export function loadGameState(): Omit<GameState, "bestScore"> | null {
+export function loadGameState(): Omit<GameState, 'bestScore'> | null {
   try {
-    const saved = localStorage.getItem("gameState");
+    const saved = localStorage.getItem('gameState');
     if (!saved) return null;
 
-    const parsed = JSON.parse(atob(saved)) as Omit<GameState, "bestScore">;
+    const parsed = JSON.parse(atob(saved)) as Omit<GameState, 'bestScore'>;
     if (parsed && parsed.tiles) {
       return {
         ...parsed,

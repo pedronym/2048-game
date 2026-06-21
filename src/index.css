@@ -3,6 +3,8 @@
   --cell-size: min(22vmin, 110px);
   --cell-gap: min(0.8vmin, 4px);
   --spacing-md: 12px;
+  --gradient-angle: 135deg;
+  --ease-expo: cubic-bezier(0.5, 1, 0.89, 1);
   /* Colors */
   --brand: #795f3b;
   --board: #ebd8bc;
@@ -81,6 +83,12 @@
   /* Radius */
   --rounded-md: 12px;
   --rounded-lg: 16px;
+  --rounded-xl: 20px;
+  /* Breakpoints */
+  --screen-sm: 600px;
+  --screen-md: 768px;
+  --screen-lg: 1024px;
+  --screen-xl: 1440px;
 }
 
 *,
@@ -94,7 +102,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  font-family: "Manrope", system-ui, sans-serif;
+  font-family: 'Manrope', system-ui, sans-serif;
   background: radial-gradient(
     ellipse 100% 280.37% at 0% 0%,
     var(--background-01) 0%,
@@ -107,41 +115,44 @@ p {
   margin: 0;
 }
 
+button {
+  border: none;
+  outline: 0;
+}
+
 #root {
   width: 100%;
   margin: 0 auto;
-  max-width: 1440px;
+  max-width: var(--screen-xl);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 50px;
+  gap: 8px;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 40px min(80px, 5vw) 24px;
+@media (min-width: 1024px) {
+  #root {
+    gap: 50px;
+  }
 }
 
-.logo {
-  fill: var(--brand);
+.btn {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-surface);
+  letter-spacing: 2%;
+  transition: background-color var(--animation-timing);
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: var(--rounded-md);
+  background-color: var(--brand);
 }
 
-.board-container  {
-  margin: 0 auto;
-  width: 100%;
+.btn:hover,
+.btn:focus-visible {
+  background-color: var(--surface-raised);
 }
 
-.footer {
-  width: 100%;
-  margin: 0 auto;
-  max-width: 1440px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-  font-size: 16px;
-  color: var(--text-secondary);
+.btn:active {
+  background-color: var(--surface-top);
 }

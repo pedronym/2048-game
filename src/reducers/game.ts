@@ -1,9 +1,9 @@
-import type { Tile, GameState } from "../@types";
+import type { Tile, GameState } from '@/@types';
 
 export type GameAction =
-  | { type: "RESTART"; payload: { initialTiles: Tile[] } }
+  | { type: 'RESTART'; payload: { initialTiles: Tile[] } }
   | {
-      type: "START_MOVE";
+      type: 'START_MOVE';
       payload: {
         nextTiles: Tile[];
         currentTiles: Tile[];
@@ -11,7 +11,7 @@ export type GameAction =
       };
     }
   | {
-      type: "END_MOVE";
+      type: 'END_MOVE';
       payload: {
         cleanedTiles: Tile[];
         moveScore: number;
@@ -20,24 +20,24 @@ export type GameAction =
       };
     }
   | {
-      type: "START_UNDO";
+      type: 'START_UNDO';
       payload: { animatedTiles: Tile[]; previousScore: number };
     }
-  | { type: "END_UNDO" };
+  | { type: 'END_UNDO' };
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
-    case "RESTART":
+    case 'RESTART':
       return {
         ...state,
         tiles: action.payload.initialTiles,
         isMoving: false,
-        gameOver: false,
-        gameWin: false,
+        isGameOver: false,
+        isGameWin: false,
         score: 0,
         history: [],
       };
-    case "START_MOVE":
+    case 'START_MOVE':
       return {
         ...state,
         isMoving: true,
@@ -50,7 +50,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           },
         ],
       };
-    case "END_MOVE": {
+    case 'END_MOVE': {
       const newScore = state.score + action.payload.moveScore;
       return {
         ...state,
@@ -58,21 +58,21 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         tiles: action.payload.cleanedTiles,
         score: newScore,
         bestScore: Math.max(state.bestScore, newScore),
-        gameWin: action.payload.reached2048 ? true : state.gameWin,
-        gameOver: action.payload.isGameOver,
+        isGameWin: action.payload.reached2048 ? true : state.isGameWin,
+        isGameOver: action.payload.isGameOver,
       };
     }
-    case "START_UNDO":
+    case 'START_UNDO':
       return {
         ...state,
         isMoving: true,
         tiles: action.payload.animatedTiles,
         score: action.payload.previousScore,
-        gameOver: false,
-        gameWin: false,
+        isGameOver: false,
+        isGameWin: false,
         history: state.history.slice(0, -1),
       };
-    case "END_UNDO":
+    case 'END_UNDO':
       return {
         ...state,
         isMoving: false,
