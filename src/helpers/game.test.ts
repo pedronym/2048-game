@@ -5,6 +5,8 @@ import {
   canMoveAnywhere,
   moveTiles,
   createTile,
+  getGroups,
+  generateInitialTiles,
 } from './game';
 import type { Tile } from '@/@types';
 import { GRID_SIZE } from '@/config/constants';
@@ -158,6 +160,63 @@ describe('game helpers', () => {
       // t4 merges into t3 at 1,0 (since t3 slides to 1,0)
       expect(t4Moved?.x).toBe(1);
       expect(t4Moved?.merged).toBe(true);
+    });
+  });
+
+  describe('getGroups', () => {
+    it('returns correct coordinate tracks for up', () => {
+      const groups = getGroups('up');
+      expect(groups.length).toBe(GRID_SIZE);
+      expect(groups[0].length).toBe(GRID_SIZE);
+      expect(groups[0][0]).toEqual({ x: 0, y: 0 });
+      expect(groups[0][1]).toEqual({ x: 0, y: 1 });
+      expect(groups[1][0]).toEqual({ x: 1, y: 0 });
+    });
+
+    it('returns correct coordinate tracks for down', () => {
+      const groups = getGroups('down');
+      expect(groups[0][0]).toEqual({ x: 0, y: GRID_SIZE - 1 });
+      expect(groups[0][1]).toEqual({ x: 0, y: GRID_SIZE - 2 });
+    });
+
+    it('returns correct coordinate tracks for left', () => {
+      const groups = getGroups('left');
+      expect(groups[0][0]).toEqual({ x: 0, y: 0 });
+      expect(groups[0][1]).toEqual({ x: 1, y: 0 });
+    });
+
+    it('returns correct coordinate tracks for right', () => {
+      const groups = getGroups('right');
+      expect(groups[0][0]).toEqual({ x: GRID_SIZE - 1, y: 0 });
+      expect(groups[0][1]).toEqual({ x: GRID_SIZE - 2, y: 0 });
+    });
+  });
+
+  describe('generateInitialTiles', () => {
+    it('generates two distinct tiles', () => {
+      const tiles = generateInitialTiles();
+      expect(tiles).toHaveLength(2);
+      expect(tiles[0].x === tiles[1].x && tiles[0].y === tiles[1].y).toBe(
+        false,
+      );
+      expect(tiles[0].isNew).toBe(true);
+      expect(tiles[1].isNew).toBe(true);
+    });
+  });
+
+  describe('createTile', () => {
+    it('creates a tile with specific value', () => {
+      const tile = createTile(1, 2, 4);
+      expect(tile.x).toBe(1);
+      expect(tile.y).toBe(2);
+      expect(tile.value).toBe(4);
+      expect(tile.isNew).toBe(true);
+      expect(typeof tile.id).toBe('string');
+    });
+
+    it('defaults value to 2 or 4', () => {
+      const tile = createTile(0, 0);
+      expect([2, 4]).toContain(tile.value);
     });
   });
 });
