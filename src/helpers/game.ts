@@ -14,17 +14,17 @@ export const createTile = (x: number, y: number, value?: number): Tile => ({
 // Helper to get coordinates groups based on movement direction
 export const getGroups = (direction: 'up' | 'down' | 'left' | 'right') => {
   const groups: { x: number; y: number }[][] = [];
-  for (let i = 0; i < GRID_SIZE; i++) {
+  for (let track = 0; track < GRID_SIZE; track++) {
     const group: { x: number; y: number }[] = [];
-    for (let j = 0; j < GRID_SIZE; j++) {
+    for (let step = 0; step < GRID_SIZE; step++) {
       if (direction === 'up') {
-        group.push({ x: i, y: j });
+        group.push({ x: track, y: step });
       } else if (direction === 'down') {
-        group.push({ x: i, y: GRID_SIZE - 1 - j });
+        group.push({ x: track, y: GRID_SIZE - 1 - step });
       } else if (direction === 'left') {
-        group.push({ x: j, y: i });
+        group.push({ x: step, y: track });
       } else if (direction === 'right') {
-        group.push({ x: GRID_SIZE - 1 - j, y: i });
+        group.push({ x: GRID_SIZE - 1 - step, y: track });
       }
     }
     groups.push(group);
@@ -53,7 +53,6 @@ export const getRandomEmptyCell = (tiles: Tile[]) => {
   return emptyCells[randomIndex];
 };
 
-// Check if any moves are possible
 export const canMoveAnywhere = (tiles: Tile[]) => {
   // Build a grid from the current non-merged tiles
   const grid: (number | null)[][] = Array.from({ length: GRID_SIZE }, () =>
@@ -61,6 +60,7 @@ export const canMoveAnywhere = (tiles: Tile[]) => {
   );
 
   let filledCells = 0;
+
   for (const t of tiles) {
     if (t.merged) continue;
     grid[t.y][t.x] = t.value;
@@ -102,4 +102,88 @@ export const generateInitialTiles = (): Tile[] => {
     );
   }
   return [tile1, tile2];
+};
+
+export const moveTiles = (
+  tiles: Tile[],
+  direction: 'up' | 'down' | 'left' | 'right',
+) => {
+  let moved = false;
+  let maxDistance = 0;
+  const nextTiles: Tile[] = tiles.map((t) => ({
+    ...t,
+    justMerged: false,
+    isNew: false,
+  }));
+
+  const groups = getGroups(direction);
+  const alreadyMergedIds = new Set<string>();
+  const mergedPairs: { sourceId: string; targetId: string }[] = [];
+
+  groups.forEach((group) => {
+    for (let i = 1; i < group.length; i++) {
+      const cell = group[i];
+      const tileIndex = nextTiles.findIndex(
+        (t) => t.x === cell.x && t.y === cell.y && !t.merged,
+      );
+      if (tileIndex === -1) continue;
+      const tile = nextTiles[tileIndex];
+
+      let lastValidCell: { x: number; y: number } | null = null;
+      let mergeTargetTile: Tile | null = null;
+
+      // Search in sliding direction
+      for (let j = i - 1; j >= 0; j--) {
+        const moveToCell = group[j];
+        const targetTile = getTileAt(nextTiles, moveToCell.x, moveToCell.y);
+
+        if (!targetTile) {
+          lastValidCell = moveToCell;
+        } else {
+          if (
+            targetTile.value === tile.value &&
+            !alreadyMergedIds.has(targetTile.id)
+          ) {
+            lastValidCell = moveToCell;
+            mergeTargetTile = targetTile;
+          }
+          break;
+        }
+      }
+
+      if (lastValidCell) {
+        moved = true;
+        const distance =
+          Math.abs(lastValidCell.x - tile.x) +
+          Math.abs(lastValidCell.y - tile.y);
+        maxDistance = Math.max(maxDistance, distance);
+
+        if (mergeTargetTile) {
+          // Update coordinate to target and mark tile for deletion post-animation
+          nextTiles[tileIndex] = {
+            ...tile,
+            x: lastValidCell.x,
+            y: lastValidCell.y,
+            merged: true,
+            distance,
+          };
+          mergedPairs.push({
+            sourceId: tile.id,
+            targetId: mergeTargetTile.id,
+          });
+          alreadyMergedIds.add(mergeTargetTile.id);
+        } else {
+          // Regular slide
+          nextTiles[tileIndex] = {
+            ...tile,
+            x: lastValidCell.x,
+            y: lastValidCell.y,
+            distance,
+          };
+        }
+      }
+    }
+  });
+
+  return { nextTiles, mergedPairs, moved, maxDistance };
 };

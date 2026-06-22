@@ -7,11 +7,10 @@ import { ANIMATION_TIMING } from '@/config/constants';
 
 import {
   createTile,
-  getGroups,
-  getTileAt,
   getRandomEmptyCell,
   canMoveAnywhere,
   generateInitialTiles,
+  moveTiles,
 } from '@/helpers/game';
 import {
   loadBestScore,
@@ -66,82 +65,10 @@ export function useGame() {
     const { tiles, isMoving, isGameOver, isGameWin, score } = stateRef.current;
     if (isMoving || isGameOver || isGameWin) return;
 
-    let moved = false;
-    let maxDistance = 0;
-    const nextTiles: Tile[] = tiles.map((t) => ({
-      ...t,
-      justMerged: false,
-      isNew: false,
-    }));
-
-    const groups = getGroups(direction);
-    const alreadyMergedIds = new Set<string>();
-    const mergedPairs: { sourceId: string; targetId: string }[] = [];
-
-    groups.forEach((group) => {
-      for (let i = 1; i < group.length; i++) {
-        const cell = group[i];
-        const tileIndex = nextTiles.findIndex(
-          (t) => t.x === cell.x && t.y === cell.y && !t.merged,
-        );
-        if (tileIndex === -1) continue;
-        const tile = nextTiles[tileIndex];
-
-        let lastValidCell: { x: number; y: number } | null = null;
-        let mergeTargetTile: Tile | null = null;
-
-        // Search in sliding direction
-        for (let j = i - 1; j >= 0; j--) {
-          const moveToCell = group[j];
-          const targetTile = getTileAt(nextTiles, moveToCell.x, moveToCell.y);
-
-          if (!targetTile) {
-            lastValidCell = moveToCell;
-          } else {
-            if (
-              targetTile.value === tile.value &&
-              !alreadyMergedIds.has(targetTile.id)
-            ) {
-              lastValidCell = moveToCell;
-              mergeTargetTile = targetTile;
-            }
-            break;
-          }
-        }
-
-        if (lastValidCell) {
-          moved = true;
-          const distance =
-            Math.abs(lastValidCell.x - tile.x) +
-            Math.abs(lastValidCell.y - tile.y);
-          maxDistance = Math.max(maxDistance, distance);
-
-          if (mergeTargetTile) {
-            // Update coordinate to target and mark tile for deletion post-animation
-            nextTiles[tileIndex] = {
-              ...tile,
-              x: lastValidCell.x,
-              y: lastValidCell.y,
-              merged: true,
-              distance,
-            };
-            mergedPairs.push({
-              sourceId: tile.id,
-              targetId: mergeTargetTile.id,
-            });
-            alreadyMergedIds.add(mergeTargetTile.id);
-          } else {
-            // Regular slide
-            nextTiles[tileIndex] = {
-              ...tile,
-              x: lastValidCell.x,
-              y: lastValidCell.y,
-              distance,
-            };
-          }
-        }
-      }
-    });
+    const { nextTiles, mergedPairs, moved, maxDistance } = moveTiles(
+      tiles,
+      direction,
+    );
 
     if (!moved) return;
 

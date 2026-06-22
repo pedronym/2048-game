@@ -98,12 +98,13 @@
 }
 
 body {
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   font-family: 'Manrope', system-ui, sans-serif;
-  background: radial-gradient(
+  background-color: var(--background-01);
+  background-image: radial-gradient(
     ellipse 100% 280.37% at 0% 0%,
     var(--background-01) 0%,
     var(--background-02) 100%
@@ -148,11 +149,27 @@ button {
   background-color: var(--brand);
 }
 
-.btn:hover,
+@media (hover: hover) {
+  .btn:hover {
+    background-color: var(--surface-raised);
+  }
+}
+
 .btn:focus-visible {
   background-color: var(--surface-raised);
 }
 
 .btn:active {
   background-color: var(--surface-top);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

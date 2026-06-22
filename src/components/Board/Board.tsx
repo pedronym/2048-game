@@ -1,4 +1,5 @@
-import GameEnd from '@/components/GameEnd/GameEnd';
+import { Cell, GameEnd } from '@/components';
+import { GRID_SIZE } from '@/config/constants';
 import styles from './Board.module.css';
 
 const Board = ({
@@ -24,6 +25,11 @@ const Board = ({
         <div
           className={`${styles.board} ${isGameOver || isGameWin ? styles.boardGameOver : ''}`}
         >
+          {/* Board Cells */}
+          {Array.from({ length: GRID_SIZE * GRID_SIZE }, (_, i) => (
+            <Cell key={i} />
+          ))}
+
           {children}
         </div>
         {(isGameOver || isGameWin) && (

@@ -32,6 +32,17 @@ export function loadBestScore(): number {
   }
 }
 
+export function isValidTile(t: unknown): boolean {
+  if (!t || typeof t !== 'object') return false;
+  const tile = t as Record<string, unknown>;
+  return (
+    typeof tile.id === 'string' &&
+    typeof tile.x === 'number' &&
+    typeof tile.y === 'number' &&
+    typeof tile.value === 'number'
+  );
+}
+
 export function saveGameState(state: GameState) {
   try {
     const stateToSave = {
@@ -53,14 +64,17 @@ export function loadGameState(): Omit<GameState, 'bestScore'> | null {
     if (!saved) return null;
 
     const parsed = JSON.parse(atob(saved)) as Omit<GameState, 'bestScore'>;
-    if (parsed && parsed.tiles) {
-      return {
-        ...parsed,
-        isMoving: false, // ensure animations are reset
-      };
+    if (parsed && Array.isArray(parsed.tiles)) {
+      const validTiles = parsed.tiles.every(isValidTile);
+
+      if (validTiles) {
+        return {
+          ...parsed,
+          isMoving: false,
+        };
+      }
     }
   } catch {
-    // In case of tampering or corruption
     return null;
   }
   return null;
