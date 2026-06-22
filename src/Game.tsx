@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
-import { Board, Cell, Header, Footer, Tile } from '@/components';
+import { Board, Header, Footer, Tile } from '@/components';
 import { useGame } from '@/hooks/useGame';
-import { GRID_SIZE, ANIMATION_TIMING } from '@/config/constants';
+import { ANIMATION_TIMING } from '@/config/constants';
 
 const Game = () => {
   const {
@@ -37,11 +37,6 @@ const Game = () => {
         boardRef={boardRef}
         historyLength={historyLength}
       >
-        {/* Board Cells */}
-        {Array.from({ length: GRID_SIZE * GRID_SIZE }, (_, i) => (
-          <Cell key={i} />
-        ))}
-
         {/* Tiles */}
         {tiles.map((tile) => (
           <Tile key={tile.id} tile={tile} />

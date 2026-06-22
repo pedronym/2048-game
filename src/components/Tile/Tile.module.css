@@ -8,19 +8,17 @@
   translate: calc(var(--x) * (var(--cell-size) + var(--cell-gap)))
     calc(var(--y) * (var(--cell-size) + var(--cell-gap)));
   transition:
-    translate var(--tile-timing, 0ms) var(--ease-expo),
+    translate var(--tile-timing, 0ms) ease-out,
     z-index 0ms var(--tile-timing, 0ms);
   will-change: translate, scale, opacity;
 }
 
-.tileNew,
-.tileMerged {
-  animation: tile-show var(--animation-timing) ease-out forwards;
+.tileNew {
+  animation: tile-appear var(--animation-timing) ease-out forwards;
 }
 
-.tileMerged .tileNumber {
-  animation: tile-merge-pulse calc(var(--animation-timing) * 2) ease-out
-    forwards;
+.tileMerged {
+  animation: tile-merge calc(var(--animation-timing) * 2) ease-out forwards;
 }
 
 .tileNumber {
@@ -160,14 +158,46 @@
 }
 
 /* ANIMATIONS */
-@keyframes tile-show {
+@keyframes tile-appear {
   from {
-    scale: 0.5;
+    scale: 0;
     opacity: 0;
   }
   to {
     scale: 1;
     opacity: 1;
+  }
+}
+
+@keyframes tile-merge {
+  0% {
+    scale: 1;
+    opacity: 1;
+    rotate: 0deg;
+  }
+
+  25% {
+    scale: 1.1;
+    opacity: 1;
+    rotate: 10deg;
+  }
+
+  50% {
+    scale: 1.1;
+    opacity: 1;
+    rotate: -5deg;
+  }
+
+  75% {
+    scale: 1.1;
+    opacity: 1;
+    rotate: 5deg;
+  }
+
+  100% {
+    scale: 1;
+    opacity: 1;
+    rotate: 0deg;
   }
 }
 
@@ -181,29 +211,5 @@
   }
   100% {
     opacity: 0;
-  }
-}
-
-@keyframes tile-merge-pulse {
-  0% {
-    transform: scale(1) rotate(0deg);
-  }
-  25% {
-    transform: scale(1.25) rotate(0deg);
-  }
-  50% {
-    transform: scale(1.25) rotate(5deg);
-  }
-  60% {
-    transform: scale(1.25) rotate(0deg);
-  }
-  75% {
-    transform: scale(1.25) rotate(-5deg);
-  }
-  85% {
-    transform: scale(1.25) rotate(0deg);
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
   }
 }

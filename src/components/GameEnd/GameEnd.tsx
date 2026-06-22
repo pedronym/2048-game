@@ -29,7 +29,7 @@ const GameEnd = ({
     <div className={styles.gameEnd}>
       <div>
         <div className={styles.gameEndText}>
-          {isWin ? 'You won!' : 'Game Over'}
+          {isWin ? 'You win!' : 'Game Over'}
         </div>
         <div className={styles.gameEndScore}>
           {isWin && historyLength !== undefined
