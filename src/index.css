@@ -4,7 +4,6 @@
   --cell-gap: min(0.8vmin, 4px);
   --spacing-md: 12px;
   --gradient-angle: 135deg;
-  --ease-expo: cubic-bezier(0.5, 1, 0.89, 1);
   /* Colors */
   --brand: #795f3b;
   --board: #ebd8bc;
@@ -17,9 +16,6 @@
   --text-primary: var(--surface);
   --text-secondary: var(--surface-raised);
   --text-surface: #ffffff;
-  --tile-shadow-01: #a15a1b;
-  --tile-shadow-02: #956940;
-  --tile-shadow-angle: 135deg;
   /* Font sizes */
   --tile-font-xs: min(7vmin, 35px);
   --tile-font-sm: min(7.2vmin, 36px);
@@ -85,9 +81,6 @@
   --rounded-lg: 16px;
   --rounded-xl: 20px;
   /* Breakpoints */
-  --screen-sm: 600px;
-  --screen-md: 768px;
-  --screen-lg: 1024px;
   --screen-xl: 1440px;
 }
 
@@ -128,13 +121,6 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 8px;
-}
-
-@media (min-width: 1024px) {
-  #root {
-    gap: 50px;
-  }
 }
 
 .btn {
