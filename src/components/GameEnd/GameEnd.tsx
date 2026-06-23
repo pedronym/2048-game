@@ -5,7 +5,7 @@ const gameOverTips = [
   'Try to keep your highest tile locked into one corner.',
   'Avoid swiping up if your main tiles are at the bottom.',
   'Keep your rows organized from highest to lowest value.',
-  'Always clear out smaller tiles first to keep the grid open.',
+  'Clear out smaller tiles first to keep the grid open.',
 ];
 
 interface GameEndProps {
