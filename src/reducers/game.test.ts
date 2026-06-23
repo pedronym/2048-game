@@ -11,7 +11,8 @@ describe('gameReducer', () => {
     isGameOver: false,
     isGameWin: false,
     isMoving: false,
-    history: [],
+    moveHistory: [],
+    moveCount: 0,
   });
 
   it('handles RESTART', () => {
@@ -20,7 +21,7 @@ describe('gameReducer', () => {
       score: 50,
       isGameOver: true,
       isGameWin: true,
-      history: [{ tiles: [], score: 10 }],
+      moveHistory: [{ tiles: [], score: 10 }],
     };
     const newTiles = [createTile(0, 0, 2)];
 
@@ -34,8 +35,7 @@ describe('gameReducer', () => {
     expect(nextState.isGameOver).toBe(false);
     expect(nextState.isGameWin).toBe(false);
     expect(nextState.score).toBe(0);
-    expect(nextState.history).toEqual([]);
-    // bestScore should be preserved
+    expect(nextState.moveHistory).toEqual([]);
     expect(nextState.bestScore).toBe(100);
   });
 
@@ -55,14 +55,17 @@ describe('gameReducer', () => {
 
     expect(nextState.isMoving).toBe(true);
     expect(nextState.tiles).toEqual(nextTiles);
-    expect(nextState.history).toHaveLength(1);
-    expect(nextState.history[0]).toEqual({ tiles: currentTiles, score: 10 });
+    expect(nextState.moveHistory).toHaveLength(1);
+    expect(nextState.moveHistory[0]).toEqual({
+      tiles: currentTiles,
+      score: 10,
+    });
   });
 
   it('handles START_MOVE with undo limit', () => {
     const initialState = {
       ...getInitialState(),
-      history: Array(25).fill({ tiles: [], score: 0 }),
+      moveHistory: Array(25).fill({ tiles: [], score: 0 }),
     };
 
     const nextState = gameReducer(initialState, {
@@ -70,8 +73,7 @@ describe('gameReducer', () => {
       payload: { currentTiles: [], nextTiles: [], currentScore: 0 },
     });
 
-    // Should not exceed 25 (UNDO_LIMIT)
-    expect(nextState.history.length).toBe(25);
+    expect(nextState.moveHistory.length).toBe(25);
   });
 
   it('handles END_MOVE', () => {
@@ -96,7 +98,7 @@ describe('gameReducer', () => {
     expect(nextState.isMoving).toBe(false);
     expect(nextState.tiles).toEqual(cleanedTiles);
     expect(nextState.score).toBe(70);
-    expect(nextState.bestScore).toBe(100); // Because 70 is not > 100
+    expect(nextState.bestScore).toBe(100);
     expect(nextState.isGameWin).toBe(true);
     expect(nextState.isGameOver).toBe(false);
   });
@@ -126,7 +128,7 @@ describe('gameReducer', () => {
       score: 50,
       isGameOver: true,
       isGameWin: true,
-      history: [historyEntry],
+      moveHistory: [historyEntry],
     };
 
     const nextState = gameReducer(initialState, {
@@ -139,7 +141,7 @@ describe('gameReducer', () => {
     expect(nextState.score).toBe(30);
     expect(nextState.isGameOver).toBe(false);
     expect(nextState.isGameWin).toBe(false);
-    expect(nextState.history).toHaveLength(0); // History popped
+    expect(nextState.moveHistory).toHaveLength(0);
   });
 
   it('handles END_UNDO', () => {

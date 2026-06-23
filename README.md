@@ -6,12 +6,12 @@ A 2048 game built in React.
 
 ## Architecture
 
-- `index.tsx` is the entry point where the main `Game.tsx` component is rendered.
+- `main.tsx` is the entry point where the main `Game.tsx` component is rendered.
 - Core game logic is managed by the `useGame` hook and exports the necessary state variables consumed by `Game.tsx`.
 - All game state manipulation is handled by the `game.ts` reducer to make state changes predictable and easier to test.
-- Abstracted keyboard and swipe event handling into a `useKeyboard` and `useSwipe` hook respectively to keep the `useGame` hook code cleaner.
+- Abstracted keyboard and swipe event handling into a `useKeys` and `useSwipe` hook respectively to keep the `useGame` hook code cleaner.
 - Separated core game utility methods into `helpers/game.ts` to make them easier to test and reuse.
-- Game state changes are saved in a `history` variable inside the `game.ts` reducer state to allow the user to undo moves.
+- Game state changes are saved in a `moveHistory` variable inside the `game.ts` reducer state to allow the user to undo moves.
 - Game state is saved to the browser's local storage every time the user makes a move (undo's are capped to 25 moves though).
 - The user's best score is persisted to the browser's local storage using basic XOR encryption (to make it slightly harder to manipulate by the client).
 - Game animations can be disabled by the user through the "prefer reduced motion" operating system preference.
@@ -73,5 +73,7 @@ npm run test
 - **Analytics**: No analytics or telemetry.
 - **Logging**: No logging or error tracking.
 - **Theme Toggle**: No theme toggle.
-- **Accessibility (A11y)**: While basic semantic HTML is used, accessibility could be improved.
+- **Accessibility (A11y)**: Basic semantic HTML and aria attributes are used but accessibility could be improved.
 - **PWA Support**: Adding a service worker and web app manifest could make the game fully installable as an offline PWA.
+- **Pre-commit hooks**: Running `npm run format` and `npm run test` before committing would be a good DX addition.
+- **Game feel**: Improved animations and overall game feedback could be improved.

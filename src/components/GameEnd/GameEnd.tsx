@@ -10,34 +10,34 @@ const gameOverTips = [
 
 interface GameEndProps {
   isWin: boolean;
-  score?: number;
-  onRestartClick: () => void;
-  historyLength?: number;
+  score: number;
+  onRestartClick?: () => void;
+  moveCount?: number;
 }
 
 const GameEnd = ({
   score = 0,
-  onRestartClick,
+  moveCount = 0,
   isWin,
-  historyLength,
+  onRestartClick,
 }: GameEndProps) => {
   const [randomTip] = useState(
     () => gameOverTips[Math.floor(Math.random() * gameOverTips.length)],
   );
 
   return (
-    <div className={styles.gameEnd}>
+    <div className={styles.gameEnd} role="alert">
       <div>
         <div className={styles.gameEndText}>
           {isWin ? 'You win!' : 'Game Over'}
         </div>
         <div className={styles.gameEndScore}>
-          {isWin && historyLength !== undefined
-            ? `You scored ${score} in ${historyLength} moves!`
+          {isWin
+            ? `You scored ${score} in ${moveCount} moves!`
             : `You scored ${score}!`}
         </div>
       </div>
-      <button className="btn" onClick={onRestartClick}>
+      <button className="btn" onClick={onRestartClick} autoFocus>
         {isWin ? 'Play again' : 'Try again'}
       </button>
       {!isWin && <p className={styles.gameEndTip}>{randomTip}</p>}

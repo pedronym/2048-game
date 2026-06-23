@@ -1,31 +1,34 @@
+import type { PropsWithChildren } from 'react';
 import { Cell, GameEnd } from '@/components';
 import { GRID_SIZE } from '@/config/constants';
 import styles from './Board.module.css';
 
-const Board = ({
-  isGameOver,
-  isGameWin,
-  score,
-  restart,
-  children,
-  boardRef,
-  historyLength,
-}: {
+interface BoardProps {
+  boardRef?: React.RefObject<HTMLDivElement | null>;
+  score?: number;
+  moveCount?: number;
   isGameOver?: boolean;
   isGameWin?: boolean;
-  score: number;
-  restart: () => void;
-  children?: React.ReactNode;
-  boardRef?: React.RefObject<HTMLDivElement | null>;
-  historyLength?: number;
-}) => {
+  restart?: () => void;
+}
+
+const Board = ({
+  boardRef,
+  score = 0,
+  moveCount = 0,
+  isGameOver,
+  isGameWin,
+  restart,
+  children,
+}: PropsWithChildren<BoardProps>) => {
   return (
     <main className={styles.boardContainer} ref={boardRef}>
       <div className={styles.boardWrapper}>
         <div
+          role="grid"
+          aria-label="2048 Game Board"
           className={`${styles.board} ${isGameOver || isGameWin ? styles.boardGameOver : ''}`}
         >
-          {/* Board Cells */}
           {Array.from({ length: GRID_SIZE * GRID_SIZE }, (_, i) => (
             <Cell key={i} />
           ))}
@@ -37,7 +40,7 @@ const Board = ({
             score={score}
             onRestartClick={restart}
             isWin={!!isGameWin}
-            historyLength={historyLength}
+            moveCount={moveCount}
           />
         )}
       </div>

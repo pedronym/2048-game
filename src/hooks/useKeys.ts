@@ -15,15 +15,19 @@ export function useKeys({ onKey }: UseKeysOptions) {
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowUp':
+          e.preventDefault();
           onKeyRef.current('up');
           break;
         case 'ArrowDown':
+          e.preventDefault();
           onKeyRef.current('down');
           break;
         case 'ArrowLeft':
+          e.preventDefault();
           onKeyRef.current('left');
           break;
         case 'ArrowRight':
+          e.preventDefault();
           onKeyRef.current('right');
           break;
       }

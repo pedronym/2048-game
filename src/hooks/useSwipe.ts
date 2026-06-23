@@ -23,8 +23,8 @@ export function useSwipe({
     const targetElement = targetRef ? targetRef.current : window;
     if (!targetElement) return;
 
-    let touchStartX = 0;
-    let touchStartY = 0;
+    let touchStartX: number | null = null;
+    let touchStartY: number | null = null;
 
     const handleTouchStart = (e: TouchEvent | Event) => {
       const touchEvent = e as TouchEvent;
@@ -37,8 +37,8 @@ export function useSwipe({
     const handleTouchEnd = (e: TouchEvent | Event) => {
       const touchEvent = e as TouchEvent;
       if (
-        !touchStartX ||
-        !touchStartY ||
+        touchStartX === null ||
+        touchStartY === null ||
         !touchEvent.changedTouches ||
         touchEvent.changedTouches.length === 0
       )
@@ -51,25 +51,23 @@ export function useSwipe({
       const deltaY = touchEndY - touchStartY;
 
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        // Horizontal swipe
         if (Math.abs(deltaX) > threshold) {
           if (deltaX > 0) onSwipeRef.current('right');
           else onSwipeRef.current('left');
         }
       } else {
-        // Vertical swipe
         if (Math.abs(deltaY) > threshold) {
           if (deltaY > 0) onSwipeRef.current('down');
           else onSwipeRef.current('up');
         }
       }
 
-      touchStartX = 0;
-      touchStartY = 0;
+      touchStartX = null;
+      touchStartY = null;
     };
 
     targetElement.addEventListener('touchstart', handleTouchStart, {
-      passive: false,
+      passive: true,
     });
     targetElement.addEventListener('touchend', handleTouchEnd);
 

@@ -65,12 +65,10 @@ describe('game helpers', () => {
       const fullBoard: Tile[] = [];
       for (let x = 0; x < GRID_SIZE; x++) {
         for (let y = 0; y < GRID_SIZE; y++) {
-          // Fill with 2s and 4s in an alternating pattern that has ONE match
           const val = (x + y) % 2 === 0 ? 2 : 4;
           fullBoard.push(createTile(x, y, val));
         }
       }
-      // Force an adjacent match
       fullBoard[0].value = 2;
       fullBoard[1].value = 2;
 
@@ -82,7 +80,6 @@ describe('game helpers', () => {
       let valCounter = 1;
       for (let x = 0; x < GRID_SIZE; x++) {
         for (let y = 0; y < GRID_SIZE; y++) {
-          // Unique values to ensure no matches
           fullBoard.push(createTile(x, y, valCounter++));
         }
       }
@@ -115,12 +112,11 @@ describe('game helpers', () => {
       expect(moved).toBe(true);
       expect(mergedPairs.length).toBe(1);
 
-      // Target tile stays at 0,0, but gets marked differently or the source tile moves to 0,0
       const sourceTile = nextTiles.find((t) => t.id === tile2.id);
       const targetTile = nextTiles.find((t) => t.id === tile1.id);
 
       expect(sourceTile?.x).toBe(0);
-      expect(sourceTile?.merged).toBe(true); // Source gets marked as merged
+      expect(sourceTile?.merged).toBe(true);
       expect(targetTile?.x).toBe(0);
       expect(targetTile?.merged).toBeFalsy();
     });
@@ -134,13 +130,11 @@ describe('game helpers', () => {
       expect(moved).toBe(true);
       const movedTile = nextTiles.find((t) => t.id === tile2.id);
 
-      // Should stop at 1,0 because 0,0 is taken by tile1
       expect(movedTile?.x).toBe(1);
       expect(movedTile?.y).toBe(0);
     });
 
     it('does not merge a tile that was already merged in the same move', () => {
-      // Let's do 2, 2, 2, 2 -> moving left should result in 4, 4
       const t1 = createTile(0, 0, 2);
       const t2 = createTile(1, 0, 2);
       const t3 = createTile(2, 0, 2);
@@ -153,11 +147,9 @@ describe('game helpers', () => {
       const t2Moved = nextTiles.find((t) => t.id === t2.id);
       const t4Moved = nextTiles.find((t) => t.id === t4.id);
 
-      // t2 merges into t1 at 0,0
       expect(t2Moved?.x).toBe(0);
       expect(t2Moved?.merged).toBe(true);
 
-      // t4 merges into t3 at 1,0 (since t3 slides to 1,0)
       expect(t4Moved?.x).toBe(1);
       expect(t4Moved?.merged).toBe(true);
     });

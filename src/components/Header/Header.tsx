@@ -21,11 +21,23 @@ const Header = ({ score, bestScore, restart }: HeaderProps) => {
       <div className={styles.scoreContainer}>
         <div className={styles.currentScore}>
           <div className={styles.scoreLabel}>Score</div>
-          <div className={styles.scoreValue}>{score}</div>
+          <div
+            className={styles.scoreValue}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {score}
+          </div>
         </div>
         <div className={styles.bestScore}>
           <div className={styles.scoreLabel}>Best</div>
-          <div className={styles.scoreValue}>{bestScore}</div>
+          <div
+            className={styles.scoreValue}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {bestScore}
+          </div>
         </div>
       </div>
     </header>

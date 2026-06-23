@@ -1,7 +1,5 @@
-import { useEffect } from 'react';
 import { Board, Header, Footer, Tile } from '@/components';
 import { useGame } from '@/hooks/useGame';
-import { ANIMATION_TIMING } from '@/config/constants';
 
 const Game = () => {
   const {
@@ -14,30 +12,21 @@ const Game = () => {
     undo,
     canUndo,
     boardRef,
-    historyLength,
+    moveCount,
   } = useGame();
-
-  // Sets a CSS variable for the animation speed timing
-  useEffect(() => {
-    document.documentElement.style.setProperty(
-      '--animation-timing',
-      `${ANIMATION_TIMING}ms`,
-    );
-  }, []);
 
   return (
     <>
       <Header score={score} bestScore={bestScore} restart={restart} />
 
       <Board
+        boardRef={boardRef}
+        score={score}
+        moveCount={moveCount}
         isGameOver={isGameOver}
         isGameWin={isGameWin}
-        score={score}
         restart={restart}
-        boardRef={boardRef}
-        historyLength={historyLength}
       >
-        {/* Tiles */}
         {tiles.map((tile) => (
           <Tile key={tile.id} tile={tile} />
         ))}

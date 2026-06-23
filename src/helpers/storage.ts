@@ -1,4 +1,5 @@
 import { type GameState } from '@/@types';
+import { isValidGameState } from '@/helpers/type-guards';
 
 const SECRET_KEY = '2048-pedronym';
 
@@ -32,25 +33,16 @@ export function loadBestScore(): number {
   }
 }
 
-export function isValidTile(t: unknown): boolean {
-  if (!t || typeof t !== 'object') return false;
-  const tile = t as Record<string, unknown>;
-  return (
-    typeof tile.id === 'string' &&
-    typeof tile.x === 'number' &&
-    typeof tile.y === 'number' &&
-    typeof tile.value === 'number'
-  );
-}
-
 export function saveGameState(state: GameState) {
+  const { tiles, isGameOver, isGameWin, score, moveCount, moveHistory } = state;
   try {
     const stateToSave = {
-      tiles: state.tiles,
-      isGameOver: state.isGameOver,
-      isGameWin: state.isGameWin,
-      score: state.score,
-      history: state.history,
+      tiles,
+      isGameOver,
+      isGameWin,
+      score,
+      moveCount,
+      moveHistory,
     };
     localStorage.setItem('gameState', btoa(JSON.stringify(stateToSave)));
   } catch (e) {
@@ -63,19 +55,19 @@ export function loadGameState(): Omit<GameState, 'bestScore'> | null {
     const saved = localStorage.getItem('gameState');
     if (!saved) return null;
 
-    const parsed = JSON.parse(atob(saved)) as Omit<GameState, 'bestScore'>;
-    if (parsed && Array.isArray(parsed.tiles)) {
-      const validTiles = parsed.tiles.every(isValidTile);
+    const parsed = JSON.parse(atob(saved));
 
-      if (validTiles) {
-        return {
-          ...parsed,
-          isMoving: false,
-        };
-      }
+    if (isValidGameState(parsed)) {
+      return {
+        ...parsed,
+        isMoving: false,
+      };
+    } else {
+      localStorage.removeItem('gameState');
+      return null;
     }
   } catch {
+    localStorage.removeItem('gameState');
     return null;
   }
-  return null;
 }
