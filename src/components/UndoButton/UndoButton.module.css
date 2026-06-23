@@ -11,7 +11,7 @@
 .undoBtnInner {
   position: relative;
   z-index: 2;
-  transition: transform var(--animation-timing) var(--ease-expo);
+  transition: transform var(--animation-timing) ease-out;
   display: flex;
   align-items: center;
   justify-content: center;

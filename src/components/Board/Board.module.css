@@ -1,10 +1,19 @@
+.boardContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: none;
+  margin: 0 0 16px;
+}
+
 .boardWrapper {
-  position: relative;
+  padding: 4px;
   width: max-content;
   height: max-content;
 }
 
 .board {
+  position: relative;
   padding: var(--cell-gap);
   display: grid;
   grid-template-rows: repeat(var(--board-size), var(--cell-size));
@@ -18,9 +27,8 @@
   opacity: 0.5;
 }
 
-.boardContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  touch-action: none;
+@media (min-width: 1024px) {
+  .boardContainer {
+    margin: 52px 0 20px;
+  }
 }
