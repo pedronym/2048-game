@@ -16,5 +16,6 @@ export type GameState = {
   isGameWin: boolean;
   score: number;
   bestScore: number;
-  history: { tiles: Tile[]; score: number }[];
+  moveCount: number;
+  moveHistory: { tiles: Tile[]; score: number }[];
 };

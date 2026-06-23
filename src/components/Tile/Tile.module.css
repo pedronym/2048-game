@@ -200,16 +200,3 @@
     rotate: 0deg;
   }
 }
-
-@keyframes tile-fade-out {
-  0%,
-  70% {
-    opacity: 1;
-  }
-  80% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-  }
-}

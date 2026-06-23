@@ -11,7 +11,6 @@ export const createTile = (x: number, y: number, value?: number): Tile => ({
   isNew: true,
 });
 
-// Helper to get coordinates groups based on movement direction
 export const getGroups = (direction: 'up' | 'down' | 'left' | 'right') => {
   const groups: { x: number; y: number }[][] = [];
   for (let track = 0; track < GRID_SIZE; track++) {
@@ -54,7 +53,6 @@ export const getRandomEmptyCell = (tiles: Tile[]) => {
 };
 
 export const canMoveAnywhere = (tiles: Tile[]) => {
-  // Build a grid from the current non-merged tiles
   const grid: (number | null)[][] = Array.from({ length: GRID_SIZE }, () =>
     Array(GRID_SIZE).fill(null),
   );
@@ -67,25 +65,20 @@ export const canMoveAnywhere = (tiles: Tile[]) => {
     filledCells++;
   }
 
-  // If there are empty cells, a move is always possible
   if (filledCells < GRID_SIZE * GRID_SIZE) return true;
 
-  // Check if any adjacent cells share the same value
   for (let y = 0; y < GRID_SIZE; y++) {
     for (let x = 0; x < GRID_SIZE; x++) {
       const value = grid[y][x];
       if (value === null) continue;
 
-      // Check right neighbor
       if (x + 1 < GRID_SIZE && grid[y][x + 1] === value) return true;
-      // Check down neighbor
       if (y + 1 < GRID_SIZE && grid[y + 1][x] === value) return true;
     }
   }
   return false;
 };
 
-// Helper to generate initial two tiles
 export const generateInitialTiles = (): Tile[] => {
   const tile1 = createTile(
     Math.floor(Math.random() * GRID_SIZE),
@@ -132,7 +125,6 @@ export const moveTiles = (
       let lastValidCell: { x: number; y: number } | null = null;
       let mergeTargetTile: Tile | null = null;
 
-      // Search in sliding direction
       for (let j = i - 1; j >= 0; j--) {
         const moveToCell = group[j];
         const targetTile = getTileAt(nextTiles, moveToCell.x, moveToCell.y);
@@ -159,7 +151,6 @@ export const moveTiles = (
         maxDistance = Math.max(maxDistance, distance);
 
         if (mergeTargetTile) {
-          // Update coordinate to target and mark tile for deletion post-animation
           nextTiles[tileIndex] = {
             ...tile,
             x: lastValidCell.x,
@@ -173,7 +164,6 @@ export const moveTiles = (
           });
           alreadyMergedIds.add(mergeTargetTile.id);
         } else {
-          // Regular slide
           nextTiles[tileIndex] = {
             ...tile,
             x: lastValidCell.x,

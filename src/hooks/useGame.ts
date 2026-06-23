@@ -1,10 +1,8 @@
 import { useReducer, useEffect, useCallback, useRef } from 'react';
-import type { Tile } from '@/@types';
-
+import type { GameState, Tile } from '@/@types';
 import { useSwipe } from '@/hooks/useSwipe';
 import { useKeys } from '@/hooks/useKeys';
 import { ANIMATION_TIMING } from '@/config/constants';
-
 import {
   createTile,
   getRandomEmptyCell,
@@ -20,8 +18,19 @@ import {
 } from '@/helpers/storage';
 import { gameReducer } from '@/reducers/game';
 
+const initialState: GameState = {
+  tiles: [],
+  isMoving: false,
+  isGameOver: false,
+  isGameWin: false,
+  score: 0,
+  bestScore: 0,
+  moveCount: 0,
+  moveHistory: [],
+};
+
 export function useGame() {
-  const [state, dispatch] = useReducer(gameReducer, undefined, () => {
+  const [state, dispatch] = useReducer(gameReducer, initialState, () => {
     const loadedState = loadGameState();
     if (loadedState) {
       return {
@@ -37,24 +46,49 @@ export function useGame() {
       isGameWin: false,
       score: 0,
       bestScore: loadBestScore(),
-      history: [],
+      moveCount: 0,
+      moveHistory: [],
     };
   });
 
+  const stateRef = useRef(state);
+  const previousBestScoreRef = useRef(state.bestScore);
+  const animationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
   useEffect(() => {
-    saveBestScore(state.bestScore);
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (state.bestScore !== previousBestScoreRef.current) {
+      saveBestScore(state.bestScore);
+      previousBestScoreRef.current = state.bestScore;
+    }
+
+    stateRef.current = state;
+
     if (!state.isMoving) {
       saveGameState(state);
     }
   }, [state]);
 
-  const stateRef = useRef(state);
   useEffect(() => {
-    stateRef.current = state;
-  }, [state]);
+    document.documentElement.style.setProperty(
+      '--animation-timing',
+      `${ANIMATION_TIMING}ms`,
+    );
+  }, []);
 
-  // Initialize/Restart the board
   const restart = useCallback(() => {
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current);
+    }
     dispatch({
       type: 'RESTART',
       payload: { initialTiles: generateInitialTiles() },
@@ -77,8 +111,7 @@ export function useGame() {
       payload: { nextTiles, currentTiles: tiles, currentScore: score },
     });
 
-    // Run cleanups and value doubling after the longest slide finishes
-    setTimeout(() => {
+    animationTimeoutRef.current = setTimeout(() => {
       let cleanedTiles = nextTiles.filter((t) => !t.merged);
 
       let moveScore = 0;
@@ -103,6 +136,7 @@ export function useGame() {
             justMerged: true,
           };
         }
+
         return {
           ...tile,
           merged: false,
@@ -112,13 +146,11 @@ export function useGame() {
         };
       });
 
-      // 3. Spawn a new random tile (isNew is set by createTile)
       const emptyCell = getRandomEmptyCell(cleanedTiles);
       if (emptyCell) {
         cleanedTiles.push(createTile(emptyCell.x, emptyCell.y));
       }
 
-      // 4. Verify checkmate
       const isGameOver = !reached2048 && !canMoveAnywhere(cleanedTiles);
 
       dispatch({
@@ -128,22 +160,11 @@ export function useGame() {
     }, ANIMATION_TIMING * maxDistance);
   }, []);
 
-  const boardRef = useRef<HTMLDivElement>(null);
-
-  useSwipe({
-    onSwipe: move,
-    targetRef: boardRef,
-  });
-
-  useKeys({
-    onKey: move,
-  });
-
   const undo = useCallback(() => {
-    const { isMoving, history, tiles } = stateRef.current;
-    if (isMoving || history.length === 0) return;
+    const { isMoving, moveHistory, tiles } = stateRef.current;
+    if (isMoving || moveHistory.length === 0) return;
 
-    const previousState = history[history.length - 1];
+    const previousState = moveHistory[moveHistory.length - 1];
 
     let maxDistance = 0;
     const animatedTiles = previousState.tiles.map((prevTile) => {
@@ -154,10 +175,9 @@ export function useGame() {
           Math.abs(currentTile.y - prevTile.y)
         : 0;
 
-      const isNew = currentTile ? prevTile.isNew : true;
+      const isNew = currentTile ? prevTile.isNew : false;
 
       if (currentTile) {
-        // Calculate reverse distance for surviving tiles to trigger CSS slide transition
         maxDistance = Math.max(maxDistance, distance);
       }
 
@@ -174,18 +194,26 @@ export function useGame() {
       payload: { animatedTiles, previousScore: previousState.score },
     });
 
-    // Phase 2: Clear animation properties after they finish
     const animationDuration = Math.max(maxDistance * ANIMATION_TIMING, 200);
-    setTimeout(() => {
+    animationTimeoutRef.current = setTimeout(() => {
       dispatch({ type: 'END_UNDO' });
     }, animationDuration);
   }, []);
 
-  const canUndo = state.history.length > 0 && !state.isMoving;
+  const boardRef = useRef<HTMLDivElement>(null);
+  const canUndo = state.moveHistory.length > 0 && !state.isMoving;
+
+  useSwipe({
+    onSwipe: move,
+    targetRef: boardRef,
+  });
+
+  useKeys({
+    onKey: move,
+  });
 
   return {
     ...state,
-    historyLength: state.history.length,
     restart,
     undo,
     canUndo,

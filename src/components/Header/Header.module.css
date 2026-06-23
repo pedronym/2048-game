@@ -56,6 +56,7 @@
   font-size: 14px;
   font-weight: 700;
   color: var(--text-secondary);
+  text-transform: uppercase;
 }
 
 .scoreValue {
@@ -65,10 +66,14 @@
 }
 
 .currentScore {
+  min-width: 97px;
+  min-height: 72px;
   background-color: rgba(121, 95, 59, 0.08);
 }
 
 .bestScore {
+  min-width: 100px;
+  min-height: 72px;
   border: 1px solid var(--board);
 }
 

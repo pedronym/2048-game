@@ -2,30 +2,40 @@ import type { Tile, GameState } from '@/@types';
 
 const UNDO_LIMIT = 25;
 
+type RestartAction = { type: 'RESTART'; payload: { initialTiles: Tile[] } };
+
+type StartMoveAction = {
+  type: 'START_MOVE';
+  payload: {
+    nextTiles: Tile[];
+    currentTiles: Tile[];
+    currentScore: number;
+  };
+};
+
+type EndMoveAction = {
+  type: 'END_MOVE';
+  payload: {
+    cleanedTiles: Tile[];
+    moveScore: number;
+    reached2048: boolean;
+    isGameOver: boolean;
+  };
+};
+
+type StartUndoAction = {
+  type: 'START_UNDO';
+  payload: { animatedTiles: Tile[]; previousScore: number };
+};
+
+type EndUndoAction = { type: 'END_UNDO' };
+
 export type GameAction =
-  | { type: 'RESTART'; payload: { initialTiles: Tile[] } }
-  | {
-      type: 'START_MOVE';
-      payload: {
-        nextTiles: Tile[];
-        currentTiles: Tile[];
-        currentScore: number;
-      };
-    }
-  | {
-      type: 'END_MOVE';
-      payload: {
-        cleanedTiles: Tile[];
-        moveScore: number;
-        reached2048: boolean;
-        isGameOver: boolean;
-      };
-    }
-  | {
-      type: 'START_UNDO';
-      payload: { animatedTiles: Tile[]; previousScore: number };
-    }
-  | { type: 'END_UNDO' };
+  | RestartAction
+  | StartMoveAction
+  | EndMoveAction
+  | StartUndoAction
+  | EndUndoAction;
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
@@ -37,15 +47,17 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         isGameOver: false,
         isGameWin: false,
         score: 0,
-        history: [],
+        moveCount: 0,
+        moveHistory: [],
       };
     case 'START_MOVE':
       return {
         ...state,
         isMoving: true,
+        moveCount: state.moveCount + 1,
         tiles: action.payload.nextTiles,
-        history: [
-          ...state.history,
+        moveHistory: [
+          ...state.moveHistory,
           {
             tiles: action.payload.currentTiles,
             score: action.payload.currentScore,
@@ -68,11 +80,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         isMoving: true,
+        moveCount: Math.max(0, state.moveCount - 1),
         tiles: action.payload.animatedTiles,
         score: action.payload.previousScore,
         isGameOver: false,
         isGameWin: false,
-        history: state.history.slice(0, -1),
+        moveHistory: state.moveHistory.slice(0, -1),
       };
     case 'END_UNDO':
       return {

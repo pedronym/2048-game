@@ -9,6 +9,7 @@
   align-items: center;
   gap: 24px;
   font-size: 16px;
+  letter-spacing: 2%;
   color: var(--text-secondary);
 }
 
