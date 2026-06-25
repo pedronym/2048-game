@@ -2,6 +2,7 @@ import { type GameState } from '@/@types';
 import { isValidGameState } from '@/helpers/type-guards';
 
 const SECRET_KEY = '2048-pedronym';
+const UNDO_LIMIT = 25;
 
 function xorEncryptDecrypt(input: string, key: string): string {
   let output = '';
@@ -42,7 +43,7 @@ export function saveGameState(state: GameState) {
       isGameWin,
       score,
       moveCount,
-      moveHistory,
+      moveHistory: moveHistory.slice(-UNDO_LIMIT),
     };
     localStorage.setItem('gameState', btoa(JSON.stringify(stateToSave)));
   } catch (e) {

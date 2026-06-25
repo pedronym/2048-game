@@ -62,7 +62,7 @@ describe('gameReducer', () => {
     });
   });
 
-  it('handles START_MOVE with undo limit', () => {
+  it('handles START_MOVE with more than 25 moves (no limit)', () => {
     const initialState = {
       ...getInitialState(),
       moveHistory: Array(25).fill({ tiles: [], score: 0 }),
@@ -73,7 +73,7 @@ describe('gameReducer', () => {
       payload: { currentTiles: [], nextTiles: [], currentScore: 0 },
     });
 
-    expect(nextState.moveHistory.length).toBe(25);
+    expect(nextState.moveHistory.length).toBe(26);
   });
 
   it('handles END_MOVE', () => {

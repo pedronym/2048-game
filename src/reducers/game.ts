@@ -1,7 +1,5 @@
 import type { Tile, GameState } from '@/@types';
 
-const UNDO_LIMIT = 25;
-
 type RestartAction = { type: 'RESTART'; payload: { initialTiles: Tile[] } };
 
 type StartMoveAction = {
@@ -62,7 +60,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
             tiles: action.payload.currentTiles,
             score: action.payload.currentScore,
           },
-        ].slice(-UNDO_LIMIT),
+        ],
       };
     case 'END_MOVE': {
       const newScore = state.score + action.payload.moveScore;
